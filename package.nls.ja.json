@@ -1,0 +1,4 @@
+{
+    "regexpOutline.headerRulesEachExt.title": "拡張子毎の見出しルール",
+    "regexpOutline.headerRulesEachExt.description": "アウトラインを生成するための見出しのルールです。ファイルの拡張子毎に設定します。詳細はREADMEを参照してください。"
+}
