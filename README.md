@@ -1,5 +1,7 @@
 # regexpOutline README
 
+[日本語のREADME](https://github.com/longfish801/regexpOutline/blob/main/README.jp.md)もあります。
+
 ## Features
 
 Generates outline by specifying the format of the heading with a regular expression.
@@ -14,7 +16,11 @@ Generates outline by specifying the format of the heading with a regular express
 * Single-line headings are assumed.  
   Complex syntax is not supported.
 
+This is a feature implemented in most Japanese editors (Hidemaru Editor, Sakura Editor, WZ EDITOR, etc).  
+I created it because it is not implemented in VSCode for unknown reasons.
+
 ## Extension Settings
+### Example
 
 Please set the setting item "Eeader Rules Each Ext".  
 It will not work in its default state.
@@ -64,12 +70,27 @@ Set the setting item "Eeader Rules Each Ext" to a string that is compressed to o
 [{"ext":".txt","rules":[{"level":1,"format":"^■(.+)$","nameIdx":1,"detail":"H1"},{"level":2,"format":"^□(.+)$","nameIdx":1,"detail":"H2"},{"level":3,"format":"^▼(.+)$","nameIdx":1,"detail":"H3"}]}]
 ```
 
+Please note the following
+
+* Compressing JSON into a single line can be done by using the “Join Lines” function of VSCode.
+* JSON requires escaping of special characters.
+* It is not recommended to set directly in settings.json.
+  - You need to escape JSON to a string, not JSON.
+
+#### Detail of keys
+
 The meaning of each key is as follows.
 All are required.
 
 * ext
   - File extension.  
     If the value specified here matches the end of the filename, it is considered to be a target.
+* showTOF
+  - Whether TOF (Top Of File) is displayed at the top of the outline or not.
+  - Boolean, default value is true.
+* showEOF
+  - Whether EOF (End Of File) is displayed at the end of the outline or not.
+  - Boolean, default value is true.
 * rules / level
   - Heading level.
 * rules / format
@@ -80,3 +101,9 @@ All are required.
     If 0 is specified, the entire string matched by format is used as the heading string.
 * rules / detail
   - The string to be displayed as details in the heading.
+
+#### About showTOF, showEOF
+
+If the heading happens to be on the first line of the file, that heading may appear above TOF in the outline (the same thing happens with EOF).  
+This issue has not been resolved. When the positions of the heading lines are the same, the display order in the outline is controlled by the VSCode application itself.  
+At least we have implemented a function to hide TOF and EOF.

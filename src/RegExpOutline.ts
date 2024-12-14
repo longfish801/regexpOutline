@@ -3,6 +3,8 @@ import * as vscode from 'vscode';
 /** 拡張子毎ルール */
 interface RulesExt {
 	ext: string;	// ファイルの拡張子
+	showTOF: boolean;	// アウトラインにTOFを表示するか否か
+	showEOF: boolean;	// アウトラインにEOFを表示するか否か
 	rules: Array<HeaderRule>;	// 見出しルールのリスト
 }
 
@@ -52,6 +54,16 @@ export class RegExpOutline {
 		} catch (exc: any) {
 			console.error('[regexpOutline] Failed to parse rulesExts as JSON.', rulesExtsStr, exc);
 		}
+		// デフォルト値を設定します
+		for (let rulesExtIdx = 0; rulesExtIdx < rulesExts.length; rulesExtIdx++) {
+			let rulesExt: RulesExt = rulesExts[rulesExtIdx];
+			if (!rulesExt.hasOwnProperty('showTOF')){
+				rulesExt.showTOF = true;
+			}
+			if (!rulesExt.hasOwnProperty('showEOF')){
+				rulesExt.showEOF = true;
+			}
+		}
 		return rulesExts;
 	}
 
@@ -68,7 +80,9 @@ export class RegExpOutline {
 			if (!this.document.fileName.endsWith(rulesExt.ext)) {
 				continue;
 			}
-			this.createSymbolFile(0, 'TOF', 'top of file');
+			if (rulesExt.showTOF){
+				this.createSymbolFile(0, 'TOF', 'top of file');
+			}
 			for (let lineIdx = 0; lineIdx < this.document.lineCount; lineIdx++) {
 				const line: vscode.TextLine = this.document.lineAt(new vscode.Position(lineIdx, 0));
 				const rules: Array<HeaderRule> = rulesExt.rules;
@@ -78,7 +92,9 @@ export class RegExpOutline {
 					}
 				}
 			}
-			this.createSymbolFile(this.document.lineCount - 1, 'EOF', 'end of file');
+			if (rulesExt.showEOF){
+				this.createSymbolFile(this.document.lineCount - 1, 'EOF', 'end of file');
+			}
 			break;
 		}
 		return this.symbols;
