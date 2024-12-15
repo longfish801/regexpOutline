@@ -2,9 +2,11 @@ import * as vscode from 'vscode';
 import { RegExpOutline } from '../../RegExpOutline';
 import * as assert from 'assert';
 
-const rulesExts = [
+const rulesExts_full = [
 	{
 		"ext": ".txt",
+		"showTOF": true,
+		"showEOF": true,
 		"rules": [
 			{
 				"level": 1,
@@ -34,6 +36,41 @@ const rulesExts = [
 	}
 ];
 
+const rulesExts_dflt = [
+	{
+		"ext": ".txt",
+		"rules": [
+			{
+				"level": 1,
+				"format": "^■(.+)$"
+			},
+			{
+				"level": 2,
+				"format": "^□(.+)$"
+			},
+			{
+				"level": 3,
+				"format": "^▼(.+)$"
+			},
+			{
+				"level": 4,
+				"format": "^▽(.+)$"
+			}
+		]
+	}
+];
+
+const rulesExts_bullets = [
+	{
+		"ext": ".txt",
+		"bullets": [
+			"■",
+			"□",
+			"▼"
+		]
+	}
+];
+
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
@@ -41,7 +78,7 @@ suite('Extension Test Suite', () => {
 		const lines = [
 			'',
 		];
-		const symbols = getSymbols(lines, 'test.dat');
+		const symbols = getSymbols(lines, 'test.dat', rulesExts_full);
 		assert.strictEqual(symbols.length, 0);
 	});
 
@@ -49,7 +86,7 @@ suite('Extension Test Suite', () => {
 		const lines = [
 			'',
 		];
-		const symbols = getSymbols(lines, 'test.txt');
+		const symbols = getSymbols(lines, 'test.txt', rulesExts_full);
 		assert.strictEqual(symbols.length, 2);
 		// TOF Symbol
 		assert.strictEqual(symbols[0].name, 'TOF');
@@ -59,6 +96,28 @@ suite('Extension Test Suite', () => {
 		assert.strictEqual(symbols[symbols.length - 1].name, 'EOF');
 		assert.strictEqual(symbols[symbols.length - 1].detail, 'end of file');
 		assert.strictEqual(symbols[symbols.length - 1].kind, vscode.SymbolKind.File);
+		// デフォルト値が適用されることの確認です
+		const symbols_dflt = getSymbols(lines, 'test.txt', rulesExts_dflt);
+		assert.strictEqual(symbols_dflt.length, 2);
+		// TOF Symbol
+		assert.strictEqual(symbols_dflt[0].name, 'TOF');
+		assert.strictEqual(symbols_dflt[0].detail, 'top of file');
+		assert.strictEqual(symbols_dflt[0].kind, vscode.SymbolKind.File);
+		// EOF Symbol
+		assert.strictEqual(symbols_dflt[symbols_dflt.length - 1].name, 'EOF');
+		assert.strictEqual(symbols_dflt[symbols_dflt.length - 1].detail, 'end of file');
+		assert.strictEqual(symbols_dflt[symbols_dflt.length - 1].kind, vscode.SymbolKind.File);
+	});
+
+	test('showTOF, showEOFが偽なら先頭、終端のDocumentSymbolを作成しません', () => {
+		const lines = [
+			'',
+		];
+		let rulesExts_copy = structuredClone(rulesExts_full);
+		rulesExts_copy[0].showTOF = false;
+		rulesExts_copy[0].showEOF = false;
+		const symbols = getSymbols(lines, 'test.txt', rulesExts_copy);
+		assert.strictEqual(symbols.length, 0);
 	});
 
 	test('同じレベルの見出しが続いた場合です', () => {
@@ -67,7 +126,7 @@ suite('Extension Test Suite', () => {
 			'■２',
 			'■３'
 		];
-		const symbols = getSymbols(lines, 'test.txt');
+		const symbols = getSymbols(lines, 'test.txt', rulesExts_full);
 		assert.strictEqual(symbols.length, 5);
 		// H1 Symbol
 		assert.strictEqual(symbols[1].name, '１');
@@ -77,6 +136,28 @@ suite('Extension Test Suite', () => {
 		assert.strictEqual(symbols[2].name, '２');
 		// H1 Symbol
 		assert.strictEqual(symbols[3].name, '３');
+		// デフォルト値が適用されることの確認です
+		const symbols_dflt = getSymbols(lines, 'test.txt', rulesExts_dflt);
+		assert.strictEqual(symbols_dflt.length, 5);
+		// H1 Symbol
+		assert.strictEqual(symbols_dflt[1].name, '１');
+		assert.strictEqual(symbols_dflt[1].detail, '');
+		assert.strictEqual(symbols_dflt[1].kind, vscode.SymbolKind.Package);
+		// H1 Symbol
+		assert.strictEqual(symbols_dflt[2].name, '２');
+		// H1 Symbol
+		assert.strictEqual(symbols_dflt[3].name, '３');
+		// bulletsキーについての確認です
+		const symbols_bullets = getSymbols(lines, 'test.txt', rulesExts_bullets);
+		assert.strictEqual(symbols_bullets.length, 5);
+		// H1 Symbol
+		assert.strictEqual(symbols_bullets[1].name, '１');
+		assert.strictEqual(symbols_bullets[1].detail, '');
+		assert.strictEqual(symbols_bullets[1].kind, vscode.SymbolKind.Package);
+		// H1 Symbol
+		assert.strictEqual(symbols_bullets[2].name, '２');
+		// H1 Symbol
+		assert.strictEqual(symbols_bullets[3].name, '３');
 	});
 
 	test('低いレベルの見出しが続いた場合です', () => {
@@ -85,7 +166,7 @@ suite('Extension Test Suite', () => {
 			'□１－１',
 			'▼１－１－１'
 		];
-		const symbols = getSymbols(lines, 'test.txt');
+		const symbols = getSymbols(lines, 'test.txt', rulesExts_full);
 		assert.strictEqual(symbols.length, 3);
 		// H1 Symbol
 		assert.strictEqual(symbols[1].name, '１');
@@ -107,7 +188,7 @@ suite('Extension Test Suite', () => {
 			'□０－２',
 			'■１'
 		];
-		const symbols = getSymbols(lines, 'test.txt');
+		const symbols = getSymbols(lines, 'test.txt', rulesExts_full);
 		assert.strictEqual(symbols.length, 3);
 		// H3 Symbol
 		const symbolH3 = symbols[0].children[0];
@@ -125,7 +206,7 @@ suite('Extension Test Suite', () => {
 			'▼１－１',
 			'■２'
 		];
-		const symbols = getSymbols(lines, 'test.txt');
+		const symbols = getSymbols(lines, 'test.txt', rulesExts_full);
 		assert.strictEqual(symbols.length, 4);
 		// H1 Symbol
 		const symbolH11 = symbols[1];
@@ -146,7 +227,7 @@ suite('Extension Test Suite', () => {
 			'▽１－１－１－１',
 			'□１－２'
 		];
-		const symbols = getSymbols(lines, 'test.txt');
+		const symbols = getSymbols(lines, 'test.txt', rulesExts_full);
 		assert.strictEqual(symbols.length, 3);
 		// H1 Symbol
 		const symbolH11 = symbols[1];
@@ -175,7 +256,7 @@ suite('Extension Test Suite', () => {
 			'□２－４',
 			'■３'
 		];
-		const symbols = getSymbols(lines, 'test.txt');
+		const symbols = getSymbols(lines, 'test.txt', rulesExts_full);
 		assert.strictEqual(symbols.length, 5);
 		// H1 Symbol
 		const symbolH11 = symbols[1];
@@ -213,7 +294,7 @@ suite('Extension Test Suite', () => {
 	});
 });
 
-function getSymbols(lines:Array<string>, fname:string){
+function getSymbols(lines:Array<string>, fname:string, rulesExts:object){
 	const textLines = lines.map((text, idx) => {
 		return getTextLine(idx, text);
 	});
