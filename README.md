@@ -25,7 +25,7 @@ I created it because it is not implemented in VSCode for unknown reasons.
 Please set the setting item "Eeader Rules Each Ext".  
 It will not work in its default state.
 
-For example, suppose you want to create the following headings.
+For example, suppose you want to create the following outline.
 Level 1 corresponds to the H1 tag (top-level heading) in HTML.
 
 * Target files with ". txt" file extension.
@@ -33,8 +33,31 @@ Level 1 corresponds to the H1 tag (top-level heading) in HTML.
 * Level 2 heading if line starts with "□"
 * Level 3 heading if line starts with "▼"
 * Make the text after the bullet the heading text.
+* Also display the beginning and end of the file in the outline.
 
 Create the heading rules in JSON format as follows.
+
+```
+[
+    {
+        "ext": ".txt",
+        "bullets": [
+            "■",
+            "□",
+            "▼"
+        ]
+    }
+]
+```
+
+Set the setting item "Eeader Rules Each Ext" to a string that is compressed to one line without line feed code and indentation.  
+Compressing JSON into a single line can be done by using the “Join Lines” function of VSCode.
+
+```
+[ { "ext": ".txt", "bullets": ["■", "□", "▼"] } ]
+```
+
+The above settings have the same meaning as the following.
 
 ```
 [
@@ -43,33 +66,23 @@ Create the heading rules in JSON format as follows.
         "rules": [
             {
                 "level": 1,
-                "format": "^■(.+)$",
-                "detail": "H1"
+                "format": "^■(.+)$"
             },
             {
                 "level": 2,
-                "format": "^□(.+)$",
-                "detail": "H2"
+                "format": "^□(.+)$"
             },
             {
                 "level": 3,
-                "format": "^▼(.+)$",
-                "detail": "H3"
+                "format": "^▼(.+)$"
             }
         ]
     }
 ]
 ```
 
-Set the setting item "Eeader Rules Each Ext" to a string that is compressed to one line without line feed code and indentation.
-
-```
-[ { "ext": ".txt", "rules": [ { "level": 1, "format": "^■(.+)$", "detail": "H1" }, { "level": 2, "format": "^□(.+)$", "detail": "H2" }, { "level": 3, "format": "^▼(.+)$", "detail": "H3" } ] } ]
-```
-
 Please note the following
 
-* Compressing JSON into a single line can be done by using the “Join Lines” function of VSCode.
 * JSON requires escaping of special characters.
 * It is not recommended to set directly in settings.json.
   - You need to escape JSON to a string, not JSON.
@@ -82,6 +95,12 @@ The meaning of each key is as follows.
   - File extension.  
     If the value specified here matches the end of the filename, it is considered to be a target.  
     Required.
+* bullets
+  - List of line prefixes.  
+    Setting “■” to the first element, equivalent to specifying for first element of rules, 1 with level key and "^■(.+)$" with format key,.
+    See the example above.  
+    Optional.  
+    If set, rules will be disabled.
 * showTOF
   - Whether TOF (Top Of File) is displayed at the top of the outline or not.
   - Boolean, default value is true.

@@ -10,6 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   - for [issue 4](https://github.com/longfish801/regexpOutline/issues/4)
 - [IMP2] Establish default values for nameIdx, detail
   - for [issue 4](https://github.com/longfish801/regexpOutline/issues/4)
+- [IMP3] Append bullets key
 
 ## [1.0.0] - 2023-09-08
 

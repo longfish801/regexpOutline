@@ -60,6 +60,17 @@ const rulesExts_dflt = [
 	}
 ];
 
+const rulesExts_bullets = [
+	{
+		"ext": ".txt",
+		"bullets": [
+			"■",
+			"□",
+			"▼"
+		]
+	}
+];
+
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
@@ -136,6 +147,17 @@ suite('Extension Test Suite', () => {
 		assert.strictEqual(symbols_dflt[2].name, '２');
 		// H1 Symbol
 		assert.strictEqual(symbols_dflt[3].name, '３');
+		// bulletsキーについての確認です
+		const symbols_bullets = getSymbols(lines, 'test.txt', rulesExts_bullets);
+		assert.strictEqual(symbols_bullets.length, 5);
+		// H1 Symbol
+		assert.strictEqual(symbols_bullets[1].name, '１');
+		assert.strictEqual(symbols_bullets[1].detail, '');
+		assert.strictEqual(symbols_bullets[1].kind, vscode.SymbolKind.Package);
+		// H1 Symbol
+		assert.strictEqual(symbols_bullets[2].name, '２');
+		// H1 Symbol
+		assert.strictEqual(symbols_bullets[3].name, '３');
 	});
 
 	test('低いレベルの見出しが続いた場合です', () => {

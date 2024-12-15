@@ -5,6 +5,7 @@ interface RulesExt {
 	ext: string;	// ファイルの拡張子
 	showTOF: boolean;	// アウトラインにTOFを表示するか否か
 	showEOF: boolean;	// アウトラインにEOFを表示するか否か
+	bullets: Array<string>;	// 行頭記号のリスト
 	rules: Array<HeaderRule>;	// 見出しルールのリスト
 }
 
@@ -62,6 +63,18 @@ export class RegExpOutline {
 			}
 			if (!rulesExt.hasOwnProperty('showEOF')) {
 				rulesExt.showEOF = true;
+			}
+			if (rulesExt.hasOwnProperty('bullets')) {
+				rulesExt.rules = [];
+				for (let bulletIdx = 0; bulletIdx < rulesExt.bullets.length; bulletIdx++) {
+					const rule = {
+						"level": bulletIdx + 1,
+						"format": "^" + rulesExt.bullets[bulletIdx] + "(.+)$",
+						"nameIdx": 1,
+						"detail": "",
+					}
+					rulesExt.rules.push(rule);
+				}
 			}
 			for (let ruleIdx = 0; ruleIdx < rulesExt.rules.length; ruleIdx++) {
 				let rule: HeaderRule = rulesExt.rules[ruleIdx];
