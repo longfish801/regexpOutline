@@ -44,19 +44,16 @@ Create the heading rules in JSON format as follows.
             {
                 "level": 1,
                 "format": "^■(.+)$",
-                "nameIdx": 1,
                 "detail": "H1"
             },
             {
                 "level": 2,
                 "format": "^□(.+)$",
-                "nameIdx": 1,
                 "detail": "H2"
             },
             {
                 "level": 3,
                 "format": "^▼(.+)$",
-                "nameIdx": 1,
                 "detail": "H3"
             }
         ]
@@ -67,7 +64,7 @@ Create the heading rules in JSON format as follows.
 Set the setting item "Eeader Rules Each Ext" to a string that is compressed to one line without line feed code and indentation.
 
 ```
-[{"ext":".txt","rules":[{"level":1,"format":"^■(.+)$","nameIdx":1,"detail":"H1"},{"level":2,"format":"^□(.+)$","nameIdx":1,"detail":"H2"},{"level":3,"format":"^▼(.+)$","nameIdx":1,"detail":"H3"}]}]
+[ { "ext": ".txt", "rules": [ { "level": 1, "format": "^■(.+)$", "detail": "H1" }, { "level": 2, "format": "^□(.+)$", "detail": "H2" }, { "level": 3, "format": "^▼(.+)$", "detail": "H3" } ] } ]
 ```
 
 Please note the following
@@ -80,11 +77,11 @@ Please note the following
 #### Detail of keys
 
 The meaning of each key is as follows.
-All are required.
 
 * ext
   - File extension.  
-    If the value specified here matches the end of the filename, it is considered to be a target.
+    If the value specified here matches the end of the filename, it is considered to be a target.  
+    Required.
 * showTOF
   - Whether TOF (Top Of File) is displayed at the top of the outline or not.
   - Boolean, default value is true.
@@ -92,15 +89,19 @@ All are required.
   - Whether EOF (End Of File) is displayed at the end of the outline or not.
   - Boolean, default value is true.
 * rules / level
-  - Heading level.
+  - Heading level.  
+    Required.
 * rules / format
   - Format of heading.  
-    Specify with a regular expression.
+    Specify with a regular expression.  
+    Required.
 * rules / nameIdx
   - The number of the group to be displayed as the heading string.  
+    Default is 1.  
     If 0 is specified, the entire string matched by format is used as the heading string.
 * rules / detail
-  - The string to be displayed as details in the heading.
+  - The string to be displayed as details in the heading.  
+    Default is an empty string.
 
 #### About showTOF, showEOF
 

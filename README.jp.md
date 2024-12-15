@@ -43,19 +43,16 @@
             {
                 "level": 1,
                 "format": "^■(.+)$",
-                "nameIdx": 1,
                 "detail": "H1"
             },
             {
                 "level": 2,
                 "format": "^□(.+)$",
-                "nameIdx": 1,
                 "detail": "H2"
             },
             {
                 "level": 3,
                 "format": "^▼(.+)$",
-                "nameIdx": 1,
                 "detail": "H3"
             }
         ]
@@ -65,8 +62,9 @@
 
 これを改行コードやインデントを取り除いて一行に圧縮した文字列を設定項目「拡張子毎の見出しルール」に設定してください。
 
+
 ```
-[{"ext":".txt","rules":[{"level":1,"format":"^■(.+)$","nameIdx":1,"detail":"H1"},{"level":2,"format":"^□(.+)$","nameIdx":1,"detail":"H2"},{"level":3,"format":"^▼(.+)$","nameIdx":1,"detail":"H3"}]}]
+[ { "ext": ".txt", "rules": [ { "level": 1, "format": "^■(.+)$", "detail": "H1" }, { "level": 2, "format": "^□(.+)$", "detail": "H2" }, { "level": 3, "format": "^▼(.+)$", "detail": "H3" } ] } ]
 ```
 
 以下の点に注意してください。
@@ -79,27 +77,31 @@
 #### キーの詳細
 
 各キーの意味は以下のとおりです。
-showTOF, showEOF以外は必須です。
 
 * ext
   - ファイルの拡張子  
-    ここに指定した値がファイル名と終端一致したならば対象とみなします。
+    ここに指定した値がファイル名と終端一致したならば対象とみなします。  
+    必須です。
 * showTOF
   - アウトラインの先頭に TOF (Top Of File)を表示するか否か。  
-    boolean型で、デフォルト値は trueです。
+    boolean型、デフォルト値は trueです。
 * showEOF
   - アウトラインの末尾に EOF (End Of File)を表示するか否か。  
-    boolean型で、デフォルト値は trueです。
+    boolean型、デフォルト値は trueです。
 * rules / level
-  - 見出しのレベルです。
+  - 見出しのレベルです。  
+    必須です。
 * rules / format
   - 見出しのフォーマットです。  
-    正規表現で指定してください。
+    正規表現で指定してください。  
+    必須です。
 * rules / nameIdx
   - 見出し文字列として表示するグループの番号です。  
+    デフォルトは 1です。  
     なお 0を指定した場合は formatで一致した全体が見出し文字列になります。
 * rules / detail
-  - 見出しに詳細として表示する文字列です。
+  - 見出しに詳細として表示する文字列です。  
+    デフォルトは空文字です。
 
 #### showTOF, showEOFについて
 

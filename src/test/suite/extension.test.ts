@@ -42,27 +42,19 @@ const rulesExts_dflt = [
 		"rules": [
 			{
 				"level": 1,
-				"format": "^■(.+)$",
-				"nameIdx": 1,
-				"detail": "H1"
+				"format": "^■(.+)$"
 			},
 			{
 				"level": 2,
-				"format": "^□(.+)$",
-				"nameIdx": 1,
-				"detail": "H2"
+				"format": "^□(.+)$"
 			},
 			{
 				"level": 3,
-				"format": "^▼(.+)$",
-				"nameIdx": 1,
-				"detail": "H3"
+				"format": "^▼(.+)$"
 			},
 			{
 				"level": 4,
-				"format": "^▽(.+)$",
-				"nameIdx": 1,
-				"detail": "H4"
+				"format": "^▽(.+)$"
 			}
 		]
 	}
@@ -133,6 +125,17 @@ suite('Extension Test Suite', () => {
 		assert.strictEqual(symbols[2].name, '２');
 		// H1 Symbol
 		assert.strictEqual(symbols[3].name, '３');
+		// デフォルト値が適用されることの確認です
+		const symbols_dflt = getSymbols(lines, 'test.txt', rulesExts_dflt);
+		assert.strictEqual(symbols_dflt.length, 5);
+		// H1 Symbol
+		assert.strictEqual(symbols_dflt[1].name, '１');
+		assert.strictEqual(symbols_dflt[1].detail, '');
+		assert.strictEqual(symbols_dflt[1].kind, vscode.SymbolKind.Package);
+		// H1 Symbol
+		assert.strictEqual(symbols_dflt[2].name, '２');
+		// H1 Symbol
+		assert.strictEqual(symbols_dflt[3].name, '３');
 	});
 
 	test('低いレベルの見出しが続いた場合です', () => {

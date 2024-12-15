@@ -57,11 +57,20 @@ export class RegExpOutline {
 		// デフォルト値を設定します
 		for (let rulesExtIdx = 0; rulesExtIdx < rulesExts.length; rulesExtIdx++) {
 			let rulesExt: RulesExt = rulesExts[rulesExtIdx];
-			if (!rulesExt.hasOwnProperty('showTOF')){
+			if (!rulesExt.hasOwnProperty('showTOF')) {
 				rulesExt.showTOF = true;
 			}
-			if (!rulesExt.hasOwnProperty('showEOF')){
+			if (!rulesExt.hasOwnProperty('showEOF')) {
 				rulesExt.showEOF = true;
+			}
+			for (let ruleIdx = 0; ruleIdx < rulesExt.rules.length; ruleIdx++) {
+				let rule: HeaderRule = rulesExt.rules[ruleIdx];
+				if (!rule.hasOwnProperty('nameIdx')) {
+					rule.nameIdx = 1;
+				}
+				if (!rule.hasOwnProperty('detail')) {
+					rule.detail = '';
+				}
 			}
 		}
 		return rulesExts;
@@ -80,7 +89,7 @@ export class RegExpOutline {
 			if (!this.document.fileName.endsWith(rulesExt.ext)) {
 				continue;
 			}
-			if (rulesExt.showTOF){
+			if (rulesExt.showTOF) {
 				this.createSymbolFile(0, 'TOF', 'top of file');
 			}
 			for (let lineIdx = 0; lineIdx < this.document.lineCount; lineIdx++) {
@@ -92,7 +101,7 @@ export class RegExpOutline {
 					}
 				}
 			}
-			if (rulesExt.showEOF){
+			if (rulesExt.showEOF) {
 				this.createSymbolFile(this.document.lineCount - 1, 'EOF', 'end of file');
 			}
 			break;

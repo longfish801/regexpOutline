@@ -8,6 +8,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - [IMP1] Append keys showTOF and showEOF
   - for [issue 4](https://github.com/longfish801/regexpOutline/issues/4)
+- [IMP2] Establish default values for nameIdx, detail
+  - for [issue 4](https://github.com/longfish801/regexpOutline/issues/4)
 
 ## [1.0.0] - 2023-09-08
 
